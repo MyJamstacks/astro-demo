@@ -1,0 +1,32 @@
+---
+import AddTask from '../components/AddTask.vue';
+const { children } = Astro.props;
+const currentPath = Astro.url.pathname;
+function isActive(p) { return currentPath===p ? 'active':''; }
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Astro To-Do</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header id="header">
+      <span id="bar">Astro Demo - Images by <a href="https://www.icons8.com">Icons8</a></span>
+      <div id="nav">
+        <h1>TO-DO LIST</h1>
+        <nav>
+          <a class={`button ${isActive('/')}`}        href="/" astro-partial>all</a>
+          <a class={`button ${isActive('/active')}`}  href="/active" astro-partial>active</a>
+          <a class={`button ${isActive('/completed')}`} href="/completed" astro-partial>completed</a>
+        </nav>
+      </div>
+      <AddTask client:load />
+    </header>
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>

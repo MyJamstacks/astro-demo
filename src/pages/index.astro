@@ -1,0 +1,21 @@
+---
+import Layout   from '../layouts/Layout.astro';
+import TaskCard from '../components/TaskCard.vue';
+
+const res   = await fetch('http://localhost:3001/tasks');
+const tasks = (await res.json()).reverse();
+---
+
+<Layout>
+  <div id="task-list" class="task-list">
+    {tasks.map(task => (
+      <div data-task-id={task.id}>
+        <TaskCard client:visible task={task} />
+      </div>
+    ))}
+  </div>
+  <script type="module">
+    import { setupTaskEvents } from '/src/utils/patchDom.js';
+    setupTaskEvents();
+  </script>
+</Layout>
