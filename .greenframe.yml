@@ -1,0 +1,12 @@
+baseURL: http://172.27.123.30:4321/
+envVar:
+  - PUBLIC_API_URL=http://host.docker.internal:3001/tasks
+
+scenarios:
+  - path: ./scenario.cjs
+    name: My Astro scenario
+    # threshold: 0.1
+
+projectName: Astro-Demo
+
+samples: 1

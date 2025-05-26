@@ -14,7 +14,7 @@
       <option value="work">work</option>
     </select>
     <img src="/priority.svg" alt="priority icon" />
-    <select name="priorty" v-model="priority">
+    <select name="priority" v-model="priority">
       <option value="none">none</option>
       <option value="low">low</option>
       <option value="medium">medium</option>
@@ -48,7 +48,8 @@ async function submitTask() {
     complete: false,
   };
 
-  const res = await fetch("http://localhost:3001/tasks", {
+  const apiUrl = import.meta.env.PUBLIC_API_URL;
+  const res = await fetch(`${apiUrl}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(newTask),

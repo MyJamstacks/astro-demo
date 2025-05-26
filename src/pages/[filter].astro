@@ -10,7 +10,10 @@ export async function getStaticPaths() {
 }
 
 const { filter } = Astro.params;
-const res         = await fetch('http://localhost:3001/tasks');
+
+const apiUrl = import.meta.env.PUBLIC_API_URL;
+const res = await fetch(`${apiUrl}`);
+
 const allTasks    = await res.json();
 const tasks = (
   filter === 'active'

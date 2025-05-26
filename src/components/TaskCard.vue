@@ -27,8 +27,10 @@ const emit = defineEmits(["task-updated"]);
 
 const complete = ref(props.task.complete);
 
+const apiUrl = import.meta.env.PUBLIC_API_URL;
+
 watch(complete, async (newVal) => {
-  await fetch(`http://localhost:3001/tasks/${props.task.id}`, {
+  await fetch(`${apiUrl}/${props.task.id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ complete: newVal }),
@@ -37,7 +39,7 @@ watch(complete, async (newVal) => {
 });
 
 async function deleteTask() {
-  const res = await fetch(`http://localhost:3001/tasks/${props.task.id}`, {
+  const res = await fetch(`${apiUrl}/${props.task.id}`, {
     method: "DELETE",
   });
   if (res.ok) {
