@@ -3,17 +3,18 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
+    "test": "playwright test tests/lighthouse.spec.ts",
     "dev": "astro dev --host 0.0.0.0",
     "build": "astro build",
-    "preview": "astro preview",
+    "preview": "astro preview --host 0.0.0.0",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/vue": "^5.0.10",
+    "@playwright/test": "^1.52.0",
+    "@thecollege/playwright-lighthouse-flow": "^1.1.7",
     "astro": "^5.7.4",
-    "@playwright/test": "^1.52.0"
-  },
-  "devDependencies": {
-    "@types/node": "^22.15.21"
+    "lighthouse": "^12.6.0",
+    "playwright": "^1.52.0"
   }
 }

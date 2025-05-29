@@ -16,7 +16,7 @@ const tasks = (await res.json()).reverse();
     ))}
   </div>
   <script type="module">
-    import { setupTaskEvents } from '/src/utils/patchDom.js';
+    import { setupTaskEvents } from '/src/scripts/patchDom.js';
     setupTaskEvents();
   </script>
 </Layout>

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="task-list">
     <TaskCard
       v-for="task in tasks"
@@ -51,4 +51,4 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener("task-added", onAddTask);
 });
-</script>
+</script> -->

@@ -1,5 +1,11 @@
 import { createApp, h } from "vue";
 
+// import {
+//   createApp,
+//   h,
+// } from "https://cdn.jsdelivr.net/npm/vue@3.2.31/dist/vue.esm-browser.js";
+// /**
+
 /**
  * @param {object} Component
  * @param {object} props
@@ -29,7 +35,7 @@ export function setupTaskEvents(filter = null) {
     wrapper.dataset.taskId = task.id;
     listEl.prepend(wrapper);
 
-    const { default: TaskCard } = await import("/src/components/TaskCard.vue");
+    const { default: TaskCard } = await import("../components/TaskCard.vue");
     patchDom(TaskCard, { task }, wrapper);
   });
 

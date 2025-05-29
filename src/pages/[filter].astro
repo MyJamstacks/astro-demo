@@ -34,6 +34,6 @@ const tasks = (
   </div>
   <script type="module">
     const filter = document.getElementById('task-list')?.dataset.filter;
-    import('/src/utils/patchDom.js').then(mod => mod.setupTaskEvents(filter));
+    import('/src/scripts/patchDom.js').then(mod => mod.setupTaskEvents(filter));
   </script>
 </Layout>

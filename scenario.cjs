@@ -4,6 +4,7 @@ const visit = async (page) => {
   await page.addMilestone("View all tasks");
   await page.waitForSelector("#task-list", { state: "visible" });
   await page.scrollToEnd();
+  await page.waitForNetworkIdle();
 
   await page.addMilestone("Add task");
   await page.getByRole("textbox", { name: "New task..." }).click();
