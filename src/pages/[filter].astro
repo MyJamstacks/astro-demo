@@ -1,6 +1,7 @@
 ---
 import Layout   from '../layouts/Layout.astro';
 import TaskCard from '../components/TaskCard.vue';
+import TaskList from '../components/TaskList.vue';
 
 export async function getStaticPaths() {
   return [
@@ -8,32 +9,22 @@ export async function getStaticPaths() {
     { params: { filter: 'completed' } },
   ];
 }
-
 const { filter } = Astro.params;
 
 const apiUrl = import.meta.env.PUBLIC_API_URL;
-const res = await fetch(`${apiUrl}`);
+const res = await fetch(apiUrl);
+const allTasks = await res.json();
 
-const allTasks    = await res.json();
-const tasks = (
-  filter === 'active'
-    ? allTasks.filter(t => !t.complete)
-    : filter === 'completed'
-      ? allTasks.filter(t => t.complete)
-      : allTasks
-).reverse();
+let tasks = allTasks;
+
+if (filter === 'active') {
+  tasks = allTasks.filter(t => !t.complete);
+} else if (filter === 'completed') {
+  tasks = allTasks.filter(t => t.complete);
+}
+tasks = tasks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 ---
 
 <Layout>
-  <div id="task-list" astro:partial class="task-list" data-filter={filter}>
-    {tasks.map(task => (
-      <div data-task-id={task.id}>
-        <TaskCard client:visible task={task} />
-      </div>
-    ))}
-  </div>
-  <script type="module">
-    const filter = document.getElementById('task-list')?.dataset.filter;
-    import('/src/scripts/patchDom.js').then(mod => mod.setupTaskEvents(filter));
-  </script>
+  <TaskList client:visible initialTasks={tasks} filter={filter} />
 </Layout>

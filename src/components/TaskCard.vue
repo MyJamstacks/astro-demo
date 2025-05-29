@@ -22,8 +22,14 @@
 <script setup>
 import { ref, watch } from "vue";
 
-const props = defineProps({ task: Object });
-const emit = defineEmits(["task-updated"]);
+const props = defineProps({
+  task: {
+    type: Object,
+    required: true,
+  },
+});
+
+const emit = defineEmits(["task-updated", "task-deleted"]);
 
 const complete = ref(props.task.complete);
 
@@ -43,10 +49,7 @@ async function deleteTask() {
     method: "DELETE",
   });
   if (res.ok) {
-    // only dispatch once the server really deleted it:
-    window.dispatchEvent(
-      new CustomEvent("task-deleted", { detail: props.task.id })
-    );
+    emit("task-deleted", props.task.id);
   } else {
     console.error("Failed to delete task:", res.status);
   }

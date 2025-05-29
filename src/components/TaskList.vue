@@ -1,54 +1,67 @@
-<!-- <template>
+<template>
   <div class="task-list">
     <TaskCard
-      v-for="task in tasks"
+      v-for="task in store.tasks.value"
       :key="task.id"
       :task="task"
-      client:visible
-      @task-updated="onUpdateTask"
-      @task-deleted="onDeleteTask"
+      @task-updated="store.updateTask"
+      @task-deleted="store.deleteTask"
     />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { onMounted, onUnmounted } from "vue";
 import TaskCard from "./TaskCard.vue";
+import { useTaskStore } from "../stores/taskStore.js";
 
 const props = defineProps({
-  initialTasks: Array,
-  filter: String,
+  initialTasks: {
+    type: Array,
+    default: () => [],
+  },
+  filter: {
+    type: String,
+    default: "all",
+  },
 });
 
-const tasks = ref(
-  [...props.initialTasks].sort(
-    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-  )
-);
+const store = useTaskStore();
 
-function onAddTask(newTask) {
-  if (props.filter === "active" && newTask.complete) return;
-  if (props.filter === "completed" && !newTask.complete) return;
-  tasks.value.unshift(newTask);
+function onTaskAdded(e) {
+  store.addTask(e.detail);
 }
 
-function onUpdateTask(updated) {
-  const i = tasks.value.findIndex((t) => t.id === updated.id);
-  if (i !== -1) tasks.value[i] = updated;
-  if (
-    (props.filter === "active" && updated.complete) ||
-    (props.filter === "completed" && !updated.complete)
-  ) {
-    tasks.value.splice(i, 1);
-  }
+async function fetchTasks() {
+  const apiUrl = import.meta.env.PUBLIC_API_URL;
+  const res = await fetch(apiUrl);
+  const data = await res.json();
+
+  store.setTasks(
+    data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  );
 }
-function onDeleteTask(id) {
-  tasks.value = tasks.value.filter((t) => t.id !== id);
-}
+
 onMounted(() => {
-  window.addEventListener("task-added", (e) => onAddTask(e.detail));
+  store.setFilter(props.filter);
+
+  if (props.initialTasks?.length) {
+    store.setTasks(
+      [...props.initialTasks].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      )
+    );
+  }
+
+  if (performance.getEntriesByType("navigation")[0]?.type === "navigate") {
+    fetchTasks();
+  }
+
+  window.dispatchEvent(new Event("task-list-ready"));
+  window.addEventListener("task-added", onTaskAdded);
 });
+
 onUnmounted(() => {
-  window.removeEventListener("task-added", onAddTask);
+  window.removeEventListener("task-added", onTaskAdded);
 });
-</script> -->
+</script>

@@ -32,11 +32,19 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 const title = ref("");
 const priority = ref("none");
 const category = ref("general");
+
+let isTaskListReady = false;
+
+onMounted(() => {
+  window.addEventListener("task-list-ready", () => {
+    isTaskListReady = true;
+  });
+});
 
 async function submitTask() {
   const newTask = {
@@ -49,7 +57,7 @@ async function submitTask() {
   };
 
   const apiUrl = import.meta.env.PUBLIC_API_URL;
-  const res = await fetch(`${apiUrl}`, {
+  const res = await fetch(apiUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(newTask),
@@ -57,7 +65,15 @@ async function submitTask() {
 
   const savedTask = await res.json();
 
-  window.dispatchEvent(new CustomEvent("task-added", { detail: savedTask }));
+  if (isTaskListReady) {
+    window.dispatchEvent(new CustomEvent("task-added", { detail: savedTask }));
+  } else {
+    setTimeout(() => {
+      window.dispatchEvent(
+        new CustomEvent("task-added", { detail: savedTask })
+      );
+    }, 100);
+  }
 
   title.value = "";
   priority.value = "none";
