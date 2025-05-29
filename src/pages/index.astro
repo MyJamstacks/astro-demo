@@ -1,22 +1,14 @@
 ---
 import Layout   from '../layouts/Layout.astro';
 import TaskCard from '../components/TaskCard.vue';
+import TaskList from '../components/TaskList.vue'
 
 const apiUrl = import.meta.env.PUBLIC_API_URL;
 const res = await fetch(`${apiUrl}`);
 const tasks = (await res.json()).reverse();
----
 
+const filter = Astro.params?.filter ?? null;
+---
 <Layout>
-  <div id="task-list" class="task-list">
-    {tasks.map(task => (
-      <div data-task-id={task.id}>
-        <TaskCard client:visible task={task} />
-      </div>
-    ))}
-  </div>
-  <script type="module">
-    import { setupTaskEvents } from '/src/scripts/patchDom.js';
-    setupTaskEvents();
-  </script>
+  <TaskList client:visible initialTasks={tasks} filter={filter} />
 </Layout>

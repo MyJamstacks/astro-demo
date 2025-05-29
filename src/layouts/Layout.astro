@@ -1,8 +1,6 @@
 ---
 import AddTask from '../components/AddTask.vue';
 const { children } = Astro.props;
-const currentPath = Astro.url.pathname;
-function isActive(p) { return currentPath===p ? 'active':''; }
 ---
 
 <html lang="en">
@@ -18,9 +16,9 @@ function isActive(p) { return currentPath===p ? 'active':''; }
       <div id="nav">
         <h1>TO-DO LIST</h1>
         <nav>
-          <a class={`button ${isActive('/')}`}        href="/" astro-partial>all</a>
-          <a class={`button ${isActive('/active')}`}  href="/active" astro-partial>active</a>
-          <a class={`button ${isActive('/completed')}`} href="/completed" astro-partial>completed</a>
+          <a class="button" href="/"        data-link="/">all</a>
+          <a class="button" href="/active"  data-link="/active">active</a>
+          <a class="button" href="/completed" data-link="/completed">completed</a>
         </nav>
       </div>
       <AddTask client:load />
@@ -28,5 +26,19 @@ function isActive(p) { return currentPath===p ? 'active':''; }
     <main>
       <slot />
     </main>
+    
+    <script type="module">
+      function setActiveLink() {
+        const current = window.location.pathname;
+        document.querySelectorAll('nav a[data-link]').forEach(link => {
+          link.classList.toggle('active', link.getAttribute('data-link') === current);
+        });
+      }
+
+      setActiveLink();
+
+      window.addEventListener('astro:after-swap', setActiveLink);
+    </script>
+
   </body>
 </html>
