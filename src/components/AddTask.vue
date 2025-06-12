@@ -67,12 +67,6 @@ async function submitTask() {
 
   if (isTaskListReady) {
     window.dispatchEvent(new CustomEvent("task-added", { detail: savedTask }));
-  } else {
-    setTimeout(() => {
-      window.dispatchEvent(
-        new CustomEvent("task-added", { detail: savedTask })
-      );
-    }, 100);
   }
 
   title.value = "";
